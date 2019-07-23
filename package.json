@@ -1,7 +1,7 @@
 {
   "name": "@taotiejs/http",
   "version": "0.0.1",
-  "description": "Log collecting and querying based on pinojs and clickhouse",
+  "description": "HTTP logger of Taotie, base on pino-http",
   "keywords": [
     "http",
     "log",
