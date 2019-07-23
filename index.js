@@ -5,7 +5,7 @@ const { startTime } = pino;
 function taotieLogger(opts, stream) {
   const { customLogLevel } = opts;
   const useLevel = opts.useLevel || 'info';
-  const logger = pino(opts, stream);
+  const { logger } = pino(opts, stream);
 
   function onResFinished(err) {
     this.removeListener('error', onResFinished);
