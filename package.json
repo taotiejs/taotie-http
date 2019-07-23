@@ -1,6 +1,6 @@
 {
   "name": "@taotiejs/http",
-  "version": "0.0.2",
+  "version": "0.1.0",
   "description": "HTTP logger of Taotie, base on pino-http",
   "keywords": [
     "http",
