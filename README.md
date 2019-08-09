@@ -25,6 +25,19 @@ npm install @taotiejs/http
 
 All usages as same as [pino-http][pino-http].
 
+## More Options
+
+#### customLogFormatter
+
+```js
+options.customLogFormatter = function(req, res) {
+  return [{
+    res,
+    responseTime: res.responseTime,
+  }, `${req.method} ${req.url} ${res.statusCode} ${res.responseTime}ms`]
+}
+```
+
 ## Server
 
 You may use [`@taotiejs/server`][taotie] for log collecting and querying.

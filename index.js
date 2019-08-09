@@ -3,7 +3,10 @@ const pino = require('pino-http');
 const { startTime } = pino;
 
 function taotieLogger(opts, stream) {
-  const { customLogLevel } = opts;
+  const {
+    customLogLevel,
+    customLogFormatter,
+  } = opts;
   const useLevel = opts.useLevel || 'info';
   const { logger } = pino(opts, stream);
 
@@ -12,24 +15,28 @@ function taotieLogger(opts, stream) {
     this.removeListener('finish', onResFinished);
 
     const { log } = this;
-    const responseTime = Date.now() - this[startTime];
+    const responseTime = this.responseTime = Date.now() - this[startTime];
     const level = customLogLevel ? customLogLevel(this, err) : useLevel;
 
-    const req = pino.stdSerializers.req(this.req);
+    if (customLogFormatter) {
+      log[level](...customLogFormatter(this.req, this));
+    } else {
+      const req = pino.stdSerializers.req(this.req);
 
-    if (err || this.err || this.statusCode >= 500) {
+      if (err || this.err || this.statusCode >= 500) {
+        log[level]({
+          res: this,
+          err: err || this.err || new Error(`failed with status code ${this.statusCode}`),
+          responseTime,
+        }, `${req.method} ${req.url} ${this.statusCode} ${responseTime}ms`);
+        return;
+      }
+
       log[level]({
         res: this,
-        err: err || this.err || new Error(`failed with status code ${this.statusCode}`),
         responseTime,
       }, `${req.method} ${req.url} ${this.statusCode} ${responseTime}ms`);
-      return;
     }
-
-    log[level]({
-      res: this,
-      responseTime,
-    }, `${req.method} ${req.url} ${this.statusCode} ${responseTime}ms`);
   }
 
   function loggingMiddleware(req, res, next) {
