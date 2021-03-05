@@ -6,7 +6,7 @@ function taotieLogger(opts, stream) {
   const {
     customLogLevel,
     customLogFormatter,
-  } = opts;
+  } = opts || {};
   const useLevel = opts.useLevel || 'info';
   const { logger } = pino(opts, stream);
 
